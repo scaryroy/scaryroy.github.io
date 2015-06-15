@@ -44,32 +44,12 @@
 					<h1>Hello World!</h1>
 					<h3>Introduction to Functional Programming with Scala</h3>
 					<p>
-						<small>By <a href="#">Roy Lin</a> / <a href="http://twitter.com/scaryroy">@scaryroy</a></small>
+						<small>By <a href="http://github.com/scaryroy">Roy Lin</a> / <a href="mailto:roy@luna.co.nz">roy@luna.co.nz</a></small>
 					</p>
 				</section>
 
-				<!-- SLIDE 2 - WHO AM I -->
 				<section>
-					<h2>Who am I</h2>
-					<img class="fragment" src="assets/datacom-payroll-logo.jpg" style="width:50%;background:white" />
-					<img class="fragment" src="assets/mytuition-logo.png" style="width:50%;background:white" />
-				</section>
-
-				<!-- SLIDE 3 - TODAY -->
-				<section>
-					<h2>Today's Session</h2>
-					<ul>
-						<li class="fragment">Hands on</li>
-						<li class="fragment">Discussions</li>
-						<li class="fragment">Tell me I'm wrong</li>
-						<li class="fragment">Feel free to add to what I say</li>
-					</ul>
-				</section>
-
-				<section>
-					<h2>Motivation</h2>
-					<p>We have whole sets of problems in our daily programming lives.</p>
-					<p>Lets try to get rid of at least some of them.</p>
+					<h2>Is functional a step forward for a step backwards?</h2>
 				</section>
 
 				<section>
@@ -77,7 +57,7 @@
 				</section>
 
 				<section>
-					<h2>Lets do an example</h2>
+					<h2>Example</h2>
 
 					<p class="fragment">Given a list with elements 1, 2, 3 and 4. We want to:</p>
 
@@ -113,45 +93,97 @@ for (int i = 0; i < list.length ; i++) {
 				<section>
 					<h2>In Scala</h2>
 					<pre><code data-trim contenteditable class="scala">
-...
+val in = List(1,2,3,4)
+val out = in.filter(_ % 2 == 0).map(_ * 2)
+val sum = out.sum
+
+// the longer way
+val out = in.filter(x => x % 2 == 0).map(x => x * 2)
+
+// using functions
+def isEven(x: Int): Boolean = x % 2 == 0
+def timesTwo(x: Int): Int = x * 2
+
+val out = in.filter(isEvent).map(timesTwo)
 					</code></pre>
 				</section>
 
 				<section>
 					<h2>Some points to discuss...</h2>
 					<ul>
-						<li class="fragment">Scalability</li>
-						<li class="fragment">Reuse</li>
-						<li class="fragment">Readability</li>
-						<li class="fragment">D.R.Y.</li>
-						<li class="fragment">Language Abstractions;</li>
-						<li class="fragment">Managing Exceptions</li>
-						<li class="fragment">Types - when you need them</li>
-						<li class="fragment">States...</li>
+						<li class="fragment"><b>Scalability & Reuse</b> - Can write your logic in a concise way so you dont have to define extra functions.</li>
+
+						<li class="fragment"><b>Readability</b> - Can be short, but can also become difficult to read for beginners.</li>
+						<li class="fragment"><b>Language Abstractions</b> - C to Java, you dont have to worry about memory, Java to Scala, you dont have to worry about things like state, null pointers, semi-colons. So you can focus on your state</li>
+						<li class="fragment"><b>Managing Exceptions</b> - For e.g. using the "Options" monadic</li>
+						<li class="fragment"><b>Types</b> - only when you need them</li>
 					</ul>
 				</section>
-				
+
 				<section>
 					<h2>Immutability</h2>
 					<ul>
 						<li class="fragment">Easier to reason</li>
 						<li class="fragment">Easier to debug</li>
-						<li class="fragment">Way easier to parallelise</li>
+						<li class="fragment">Way easier to parallelise - e.g. </li>
 					</ul>
+					<pre class="fragment"><code data-trim contenteditable class="scala">
+import scala.concurrent._
+import ExecutionContext.Implicits.global
+val out = in.filter(_ % 2 == 0).map(_ * 2).par
+					</code></pre>
 				</section>
 
 				<section>
 					<h2>Null pointer exceptions?</h2>
 					<pre><code data-trim contenteditable class="scala">
-...
+// Options are like a list, except the may ONLY hold one value
+val x: Option[Int] = Some(10)
+val y: Option[Int] = None
+
+x.map(_ * 2) // result of type Option[Int] = Some(20)
+x.map(_ * 2).getOrElse(-1) // result of type Int = 20
+
+y.map(_ * 2) // result of type Option[Int] = None
+y.map(_ * 2).getOrElse(-1) // result of type Int = -1
 					</code></pre>
 				</section>
 
 				<section>
 					<h2>Parallelisation</h2>
+					<p>Usually when we do something in parallel, the main thread has to wait (or block) somewhere for parallel task to completed.</p>
+					<p>The idea of reactive - meaning never blocking.</p>
+					<p>The idea is sort of like javascript callbacks.</p>
+				</section>
+
+				<section>
+					<h2>Non-blocking Parallelisation</h2>
 					<pre><code data-trim contenteditable class="scala">
-import scala.concurrent._
-import ExecutionContext.Implicits.global
+def getFacebookName() = "John"
+def getTwitterName() = "@JR"
+
+val future1 = Future(getFacebookName()) // starts running
+val future2 = Future(getTwitterName()) // starts running
+
+// using maps
+future1.map { fbName =>
+	future2.map { twitterName =>
+		println(fbName, twitterName)
+	}
+}
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Non-blocking Parallelisation</h2>
+					<pre><code data-trim contenteditable class="scala">
+// using for comprehensions
+for {
+	fbName <- future1
+	twitterName <- future2
+} yield println(fbName, twitterName)
+
+// we are never blocking the main thread, the println in performed on a new thread like a callback.
 					</code></pre>
 				</section>
 
@@ -169,7 +201,7 @@ import ExecutionContext.Implicits.global
 				</section>
 
 				<section>
-					<p style="font-size:60px;font-weight: bold;">println(Thank You!)</p>
+					<p style="font-size:60px;font-weight: bold;">println(Thank You)</p>
 				</section>
 
 			</div>
