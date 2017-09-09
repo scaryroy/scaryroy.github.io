@@ -9,16 +9,17 @@
 
     <form>
       <input id="geocomplete" type="text" placeholder="Type in an address" size="90">
-      <div id="map-canvas"></div>
-
-      Lat: <input class="lat"><br>
-      Lng: <input class="lng"><br><br>
-
-      Suburb: <input class="suburb"><br>
-      City: <input class="city"><br>
-      Postcode: <input class="postcode"><br>
-      Country: <input class="country"><br>
     </form>
+
+    <div class="map-canvas"></div>
+
+    Lat: <input class="lat"><br>
+    Lng: <input class="lng"><br><br>
+
+    Suburb: <input class="suburb"><br>
+    City: <input class="city"><br>
+    Postcode: <input class="postcode"><br>
+    Country: <input class="country"><br>
 
     <script src="http://maps.googleapis.com/maps/api/js?sensor=false&libraries=places&key=AIzaSyA-aYIWcm8umGxX-3Nmvfx91ugLXOOZGF8"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -58,7 +59,7 @@
         };
 
         $("#geocomplete").geocomplete({
-  				map: "#map-canvas",
+  				map: ".map-canvas",
   				componentRestrictions: {country: "nz"},
   				mapOptions: {
   					zoom: 5,
