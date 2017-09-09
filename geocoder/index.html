@@ -16,6 +16,8 @@
     Lat: <input name="lat"><br>
     Lng: <input name="lng"><br><br>
 
+    Number: <input name="number"><br>
+    Street: <input name="street"><br>
     Suburb: <input name="suburb"><br>
     City: <input name="city"><br>
     Postcode: <input name="postcode"><br>
@@ -45,13 +47,8 @@
             }
           }
 
-          $("[name='street']").val(
-            (
-              (addressTypeToValue['street_number'] ? addressTypeToValue['street_number'] : '') + ' ' +
-              (addressTypeToValue['route'] ? addressTypeToValue['route'] : '')
-            ).trim()
-          );
-
+          $("[name='number']").val(addressTypeToValue['street_number'] ? addressTypeToValue['street_number'] : '');
+          $("[name='street']").val(addressTypeToValue['route'] ? addressTypeToValue['route'] : '');
           $("[name='suburb']").val(addressTypeToValue['sublocality'] ? addressTypeToValue['sublocality'] : '');
           $("[name='city']").val(addressTypeToValue['locality'] ? addressTypeToValue['locality'] : '');
           $("[name='postcode']").val(addressTypeToValue['postal_code'] ? addressTypeToValue['postal_code'] : '');
