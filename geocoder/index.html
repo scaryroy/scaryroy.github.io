@@ -47,6 +47,10 @@
             }
           }
 
+          console.log("---")
+          console.dir(addressTypeToValue)
+          console.dir(place)
+
           $("[name='number']").val(addressTypeToValue['street_number'] ? addressTypeToValue['street_number'] : '');
           $("[name='street']").val(addressTypeToValue['route'] ? addressTypeToValue['route'] : '');
           $("[name='suburb']").val(addressTypeToValue['sublocality'] ? addressTypeToValue['sublocality'] : '');
