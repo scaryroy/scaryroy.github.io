@@ -10,7 +10,7 @@
     <form>
       <input id="geocomplete" type="text" placeholder="Type in an address" size="90">
 
-      <div class="map-canvas"></div>
+      <div id="map-canvas"></div>
 
       Lat: <input class="lat"><br>
       Lng: <input class="lng"><br><br>
@@ -33,8 +33,8 @@
           if (!place) return;
           if (!place.geometry) return;
 
-          $(".enquiry-form [name='lat']").val(place.geometry.location.lat());
-          $(".enquiry-form [name='lng']").val(place.geometry.location.lng());
+          $("[name='lat']").val(place.geometry.location.lat());
+          $("[name='lng']").val(place.geometry.location.lng());
 
           var addressTypeToValue = {};
           for(var i = place.address_components.length - 1; i >= 0; i--) {
@@ -45,21 +45,21 @@
             }
           }
 
-          $(".enquiry-form [name='street']").val(
+          $("[name='street']").val(
             (
               (addressTypeToValue['street_number'] ? addressTypeToValue['street_number'] : '') + ' ' +
               (addressTypeToValue['route'] ? addressTypeToValue['route'] : '')
             ).trim()
           );
 
-          $("form [name='suburb']").val(addressTypeToValue['sublocality'] ? addressTypeToValue['sublocality'] : '');
-          $("form [name='city']").val(addressTypeToValue['locality'] ? addressTypeToValue['locality'] : '');
-          $("form [name='postcode']").val(addressTypeToValue['postal_code'] ? addressTypeToValue['postal_code'] : '');
-          $("form [name='country']").val(addressTypeToValue['country'] ? addressTypeToValue['country'] : '');
+          $("[name='suburb']").val(addressTypeToValue['sublocality'] ? addressTypeToValue['sublocality'] : '');
+          $("[name='city']").val(addressTypeToValue['locality'] ? addressTypeToValue['locality'] : '');
+          $("[name='postcode']").val(addressTypeToValue['postal_code'] ? addressTypeToValue['postal_code'] : '');
+          $("[name='country']").val(addressTypeToValue['country'] ? addressTypeToValue['country'] : '');
         };
 
         $("#geocomplete").geocomplete({
-  				map: "#enquiry-map-canvas",
+  				map: "#map-canvas",
   				componentRestrictions: {country: "nz"},
   				mapOptions: {
   					zoom: 5,
