@@ -9,7 +9,11 @@
 
     <form>
       <input id="geocomplete" type="text" placeholder="Type in an address" size="90">
-      <input id="find" type="button" value="find">
+
+      <input class="suburb">
+      <input class="city">
+      <input class="postcode">
+      <input class="country">
     </form>
 
     <div class="map-canvas"></div>
@@ -22,24 +26,50 @@
     <script>
       $(function(){
 
-        var options = {
-          map: ".map-canvas"
+        var addressChanged = function (event, place) {
+          if (!place) return;
+          if (!place.geometry) return;
+
+          $(".enquiry-form [name='lat']").val(place.geometry.location.lat());
+          $(".enquiry-form [name='lng']").val(place.geometry.location.lng());
+
+          var addressTypeToValue = {};
+          for(var i = place.address_components.length - 1; i >= 0; i--) {
+            var addressComponent = place.address_components[i];
+            for(var j = 0; j < addressComponent.types.length; j++) {
+              var addressComponentType = addressComponent.types[j];
+              addressTypeToValue[addressComponentType] = addressComponent.short_name;
+            }
+          }
+
+          $(".enquiry-form [name='street']").val(
+            (
+              (addressTypeToValue['street_number'] ? addressTypeToValue['street_number'] : '') + ' ' +
+              (addressTypeToValue['route'] ? addressTypeToValue['route'] : '')
+            ).trim()
+          );
+
+          $("form [name='suburb']").val(addressTypeToValue['sublocality'] ? addressTypeToValue['sublocality'] : '');
+          $("form [name='city']").val(addressTypeToValue['locality'] ? addressTypeToValue['locality'] : '');
+          $("form [name='postcode']").val(addressTypeToValue['postal_code'] ? addressTypeToValue['postal_code'] : '');
+          $("form [name='country']").val(addressTypeToValue['country'] ? addressTypeToValue['country'] : '');
         };
 
-        $("#geocomplete").geocomplete(options)
-          .bind("geocode:result", function(event, result){
-            console.log("Result: " + result.formatted_address);
-          })
-          .bind("geocode:error", function(event, status){
-            console.log("ERROR: " + status);
-          })
-          .bind("geocode:multiple", function(event, results){
-            console.log("Multiple: " + results.length + " results found");
-          });
-
-        $("#find").click(function(){
-          $("#geocomplete").trigger("geocode");
-        });
+        $("#geocomplete").geocomplete({
+  				map: "#enquiry-map-canvas",
+  				componentRestrictions: {country: "nz"},
+  				mapOptions: {
+  					zoom: 5,
+  					center: {lat: -40.917170, lng: 173.456179},
+  					draggable: true,
+  					gestureHandling: "cooperative",
+  					fullscreenControl: false,
+  					mapTypeControl: false,
+  					streetViewControl: false
+  				}
+  			})
+  				.bind("geocode:result", addressChanged)
+  				.bind("geocode:error", function(event, status) {});
 
         $("#examples a").click(function(){
           $("#geocomplete").val($(this).text()).trigger("geocode");
