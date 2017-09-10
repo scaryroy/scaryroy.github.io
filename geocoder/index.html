@@ -31,10 +31,10 @@
     <script>
       $(function(){
 
-        var initialAddress = $.url.param("address");
+        var initialAddress = $.urlParam("address");
         initialAddress = initialAddress ? initialAddress : '';
 
-        var initialNotes = $.url.param("notes");
+        var initialNotes = $.urlParam("notes");
         initialNotes = initialNotes ? initialNotes : '';
 
         var addressChanged = function (event, place) {
