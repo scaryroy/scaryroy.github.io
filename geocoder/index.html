@@ -51,9 +51,6 @@
           if (!place) return;
           if (!place.geometry) return;
 
-          $("[name='lat']").val(place.geometry.location.lat());
-          $("[name='lng']").val(place.geometry.location.lng());
-
           var addressTypeToValue = {};
           for(var i = place.address_components.length - 1; i >= 0; i--) {
             var addressComponent = place.address_components[i];
@@ -63,16 +60,37 @@
             }
           }
 
+          var data = {
+            name: $("#geocomplete").val(),
+
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng(),
+
+            number: addressTypeToValue['street_number'] ? addressTypeToValue['street_number'] : '',
+            street: addressTypeToValue['route'] ? addressTypeToValue['route'] : '',
+            addressTypeToValue['sublocality'] ? addressTypeToValue['sublocality'] : '',
+            addressTypeToValue['locality'] ? addressTypeToValue['locality'] : '',
+            addressTypeToValue['postal_code'] ? addressTypeToValue['postal_code'] : '',
+            addressTypeToValue['country'] ? addressTypeToValue['country'] : ''
+          }
+
           console.log("---")
           console.dir(addressTypeToValue)
           console.dir(place)
+          console.dir(data)
 
-          $("[name='number']").val(addressTypeToValue['street_number'] ? addressTypeToValue['street_number'] : '');
-          $("[name='street']").val(addressTypeToValue['route'] ? addressTypeToValue['route'] : '');
-          $("[name='suburb']").val(addressTypeToValue['sublocality'] ? addressTypeToValue['sublocality'] : '');
-          $("[name='city']").val(addressTypeToValue['locality'] ? addressTypeToValue['locality'] : '');
-          $("[name='postcode']").val(addressTypeToValue['postal_code'] ? addressTypeToValue['postal_code'] : '');
-          $("[name='country']").val(addressTypeToValue['country'] ? addressTypeToValue['country'] : '');
+          $("[name='lat']").val(data.lat);
+          $("[name='lng']").val(data.lng);
+
+          $("[name='number']").val(data.number);
+          $("[name='street']").val(data.street);
+          $("[name='suburb']").val(data.suburb);
+          $("[name='city']").val(data.city);
+          $("[name='postcode']").val(data.postcode);
+          $("[name='country']").val(data.country);
+
+          window.parent.postMessage(JSON.stringify(data), '*');
+
         };
 
         $("#geocomplete").geocomplete({
