@@ -31,6 +31,12 @@
     <script>
       $(function(){
 
+        var initialAddress = $.url.param("address");
+        initialAddress = initialAddress ? initialAddress : '';
+
+        var initialNotes = $.url.param("notes");
+        initialNotes = initialNotes ? initialNotes : '';
+
         var addressChanged = function (event, place) {
           if (!place) return;
           if (!place.geometry) return;
@@ -61,6 +67,7 @@
 
         $("#geocomplete").geocomplete({
   				map: ".map-canvas",
+          location: initialAddress,
   				componentRestrictions: {country: "nz"},
           types: [],
   				mapOptions: {
