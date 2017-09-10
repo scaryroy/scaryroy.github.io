@@ -31,10 +31,20 @@
     <script>
       $(function(){
 
-        var initialAddress = $.urlParam("address");
+        function getUrlParam(name, url) {
+          if (!url) url = window.location.href;
+          name = name.replace(/[\[\]]/g, "\\$&");
+          var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+              results = regex.exec(url);
+          if (!results) return null;
+          if (!results[2]) return '';
+          return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
+        var initialAddress = getUrlParam("address");
         initialAddress = initialAddress ? initialAddress : '';
 
-        var initialNotes = $.urlParam("notes");
+        var initialNotes = getUrlParam("notes");
         initialNotes = initialNotes ? initialNotes : '';
 
         var addressChanged = function (event, place) {
