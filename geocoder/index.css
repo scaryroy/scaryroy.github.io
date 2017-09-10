@@ -16,7 +16,7 @@ a {
   text-decoration: underline;
 }
 
-#geocomplete {
+.input {
   width:100%;
   box-sizing: border-box;
   padding: 9px;
@@ -31,4 +31,14 @@ a {
 #multiple li {
   cursor: pointer;
   text-decoration: underline;
+}
+
+.label {
+  display: inline-block;
+  margin: 0px 0px 3px 2px;
+  color: #666;
+}
+
+.notes-label {
+  margin-top: 12px;
 }

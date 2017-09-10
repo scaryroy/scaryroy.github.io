@@ -8,14 +8,18 @@
   <body>
 
     <form>
-      <input id="geocomplete" type="text" placeholder="Type in an address" size="90">
+      <label class="label location-label">Location</label>
+      <input class="input location-input" type="text" placeholder="Start typing your location... then select from dropdown" size="90">
+
+      <label class="label notes-label">Access Information (optional)</label>
+      <input class="input notes-input" type="text" placeholder="I.e. Building access code or directions" size="90">
     </form>
 
     <div class="map-canvas"></div>
 
-    Lat: <input name="lat"> | Lng: <input name="lng"><br><br>
-    Flat: <input name="flat"> | Number: <input name="number"> | Street: <input name="street"><br>
-    Suburb: <input name="suburb"> | Postcode: <input name="postcode"> | City: <input name="city"> | Country: <input name="country"><br>
+    Lat:<input name="lat"> Lng:<input name="lng">
+    Flat:<input name="flat"> Number:<input name="number"> Street:<input name="street">
+    Suburb:<input name="suburb"> Postcode:<input name="postcode"> City:<input name="city"> Country:<input name="country">
 
     <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyA-aYIWcm8umGxX-3Nmvfx91ugLXOOZGF8"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -23,75 +27,20 @@
     <script src="jquery.geocomplete.min.js"></script>
 
     <script>
-      $(function(){
+      frameParam = '';
+      locationParam = '';
+      notesparam = '';
 
-        function getUrlParam(name, url) {
-          if (!url) url = window.location.href;
-          name = name.replace(/[\[\]]/g, "\\$&");
-          var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-              results = regex.exec(url);
-          if (!results) return null;
-          if (!results[2]) return '';
-          return decodeURIComponent(results[2].replace(/\+/g, " "));
-        }
+      $(function() {
+        frameParam = getUrlParam("frame");
+        locationParam = getUrlParam("location");
+        notesParam = getUrlParam("notes");
 
-        var initialAddress = getUrlParam("address");
-        initialAddress = initialAddress ? initialAddress : '';
+        $(".notes-input").val(notesParam);
 
-        var initialNotes = getUrlParam("notes");
-        initialNotes = initialNotes ? initialNotes : '';
-
-        var addressChanged = function (event, place) {
-          if (!place) return;
-          if (!place.geometry) return;
-
-          var addressTypeToValue = {};
-          for(var i = place.address_components.length - 1; i >= 0; i--) {
-            var addressComponent = place.address_components[i];
-            for(var j = 0; j < addressComponent.types.length; j++) {
-              var addressComponentType = addressComponent.types[j];
-              addressTypeToValue[addressComponentType] = addressComponent.short_name;
-            }
-          }
-
-          var data = {
-            name: $("#geocomplete").val(),
-
-            lat: place.geometry.location.lat(),
-            lng: place.geometry.location.lng(),
-
-            flat: addressTypeToValue['subpremise'] ? addressTypeToValue['subpremise'] : '',
-            number: addressTypeToValue['street_number'] ? addressTypeToValue['street_number'] : '',
-            street: addressTypeToValue['route'] ? addressTypeToValue['route'] : '',
-            suburb: addressTypeToValue['sublocality'] ? addressTypeToValue['sublocality'] : '',
-            postcode: addressTypeToValue['postal_code'] ? addressTypeToValue['postal_code'] : '',
-            city: addressTypeToValue['locality'] ? addressTypeToValue['locality'] : '',
-            country: addressTypeToValue['country'] ? addressTypeToValue['country'] : ''
-          };
-
-          console.log("---")
-          console.dir(addressTypeToValue)
-          console.dir(place)
-          console.dir(data)
-
-          $("[name='lat']").val(data.lat);
-          $("[name='lng']").val(data.lng);
-
-          $("[name='flat']").val(data.flat);
-          $("[name='number']").val(data.number);
-          $("[name='street']").val(data.street);
-          $("[name='suburb']").val(data.suburb);
-          $("[name='postcode']").val(data.postcode);
-          $("[name='city']").val(data.city);
-          $("[name='country']").val(data.country);
-
-          window.parent.postMessage(JSON.stringify(data), '*');
-
-        };
-
-        $("#geocomplete").geocomplete({
+        $(".location-input").geocomplete({
   				map: ".map-canvas",
-          location: initialAddress,
+          location: locationParam,
   				componentRestrictions: {country: "nz"},
           types: [],
   				mapOptions: {
@@ -104,10 +53,73 @@
   					streetViewControl: false
   				}
   			})
-  				.bind("geocode:result", addressChanged)
-  				.bind("geocode:error", function(event, status) {});
+  				.bind("geocode:result", onAddressChanged)
+  				.bind("geocode:error", function(event, status) {
+            // do nothing
+          });
 
       });
+
+      function getUrlParam(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return '';
+        if (!results[2]) return '';
+        var output = decodeURIComponent(results[2].replace(/\+/g, " "));
+        return (output ? output : '');
+      }
+
+      function onAddressChanged(event, place) {
+        if (!place) return;
+        if (!place.geometry) return;
+
+        var addressTypeToValue = {};
+        for(var i = place.address_components.length - 1; i >= 0; i--) {
+          var addressComponent = place.address_components[i];
+          for(var j = 0; j < addressComponent.types.length; j++) {
+            var addressComponentType = addressComponent.types[j];
+            addressTypeToValue[addressComponentType] = addressComponent.short_name;
+          }
+        }
+
+        var data = {
+          frame: frameParam,
+
+          location: $(".location-input").val(),
+          notes: $(".notes-input").val(),
+
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
+
+          flat: addressTypeToValue['subpremise'] ? addressTypeToValue['subpremise'] : '',
+          number: addressTypeToValue['street_number'] ? addressTypeToValue['street_number'] : '',
+          street: addressTypeToValue['route'] ? addressTypeToValue['route'] : '',
+          suburb: addressTypeToValue['sublocality'] ? addressTypeToValue['sublocality'] : '',
+          postcode: addressTypeToValue['postal_code'] ? addressTypeToValue['postal_code'] : '',
+          city: addressTypeToValue['locality'] ? addressTypeToValue['locality'] : '',
+          country: addressTypeToValue['country'] ? addressTypeToValue['country'] : ''
+        };
+
+        console.log("---")
+        console.dir(addressTypeToValue)
+        console.dir(place)
+        console.dir(data)
+
+        $("[name='lat']").val(data.lat);
+        $("[name='lng']").val(data.lng);
+
+        $("[name='flat']").val(data.flat);
+        $("[name='number']").val(data.number);
+        $("[name='street']").val(data.street);
+        $("[name='suburb']").val(data.suburb);
+        $("[name='postcode']").val(data.postcode);
+        $("[name='city']").val(data.city);
+        $("[name='country']").val(data.country);
+
+        window.parent.postMessage(data, '*');
+      }
     </script>
   </body>
 </html>
