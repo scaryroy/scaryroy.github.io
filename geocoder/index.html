@@ -58,7 +58,7 @@
             // do nothing
           });
 
-        $(".notes-input").change(onNotesChanged)
+        $(".notes-input").keyup(onNotesChanged)
 
       });
 
@@ -126,7 +126,7 @@
         };
 
         console.dir(data)
-        
+
         window.parent.postMessage(data, '*');
       }
     </script>
