@@ -36,7 +36,10 @@
         locationParam = getUrlParam("location");
         notesParam = getUrlParam("notes");
 
-        $(".notes-input").val(notesParam);
+        var $notesInput = $(".notes-input")
+        $notesInput.val(notesParam);
+        $notesInput.keyup(onNotesChanged)
+        $notesInput.change(onNotesChanged)
 
         $(".location-input").geocomplete({
   				map: ".map-canvas",
@@ -57,8 +60,6 @@
   				.bind("geocode:error", function(event, status) {
             // do nothing
           });
-
-        $(".notes-input").keyup(onNotesChanged)
 
       });
 
