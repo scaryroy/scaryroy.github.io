@@ -41,7 +41,8 @@
         $notesInput.keyup(onNotesChanged);
         $notesInput.change(onNotesChanged);
 
-        $(".location-input").geocomplete({
+        var $locationInput = $(".location-input")
+        $locationInput.geocomplete({
   				map: ".map-canvas",
           location: locationParam,
   				componentRestrictions: {country: "nz"},
@@ -60,6 +61,8 @@
   				.bind("geocode:error", function(event, status) {
             // do nothing
           });
+
+          $locationInput.val(locationParam);
 
       });
 
