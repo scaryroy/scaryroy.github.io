@@ -44,7 +44,8 @@
         var $locationInput = $(".location-input")
         $locationInput.geocomplete({
   				map: ".map-canvas",
-          //location: locationParam,
+          input: locationParam,
+          location: locationParam,
   				componentRestrictions: {country: "nz"},
           types: [],
   				mapOptions: {
