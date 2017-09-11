@@ -36,10 +36,10 @@
         locationParam = getUrlParam("location");
         notesParam = getUrlParam("notes");
 
-        var $notesInput = $(".notes-input")
+        var $notesInput = $(".notes-input");
         $notesInput.val(notesParam);
-        $notesInput.keyup(onNotesChanged)
-        $notesInput.change(onNotesChanged)
+        $notesInput.keyup(onNotesChanged);
+        $notesInput.change(onNotesChanged);
 
         $(".location-input").geocomplete({
   				map: ".map-canvas",
