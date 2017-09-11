@@ -58,6 +58,8 @@
             // do nothing
           });
 
+        $(".notes-input").change(onNotesChanged)
+
       });
 
       function getUrlParam(name, url) {
@@ -88,7 +90,6 @@
           frame: frameParam,
 
           location: $(".location-input").val(),
-          notes: $(".notes-input").val(),
 
           lat: place.geometry.location.lat(),
           lng: place.geometry.location.lng(),
@@ -102,9 +103,6 @@
           country: addressTypeToValue['country'] ? addressTypeToValue['country'] : ''
         };
 
-        console.log("---")
-        console.dir(addressTypeToValue)
-        console.dir(place)
         console.dir(data)
 
         $("[name='lat']").val(data.lat);
@@ -118,6 +116,17 @@
         $("[name='city']").val(data.city);
         $("[name='country']").val(data.country);
 
+        window.parent.postMessage(data, '*');
+      }
+
+      function onNotesChanged(event, place) {
+        var data = {
+          frame: frameParam,
+          notes: $(".notes-input").val()
+        };
+
+        console.dir(data)
+        
         window.parent.postMessage(data, '*');
       }
     </script>
