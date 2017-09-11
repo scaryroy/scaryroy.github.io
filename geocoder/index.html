@@ -24,7 +24,7 @@
     <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyA-aYIWcm8umGxX-3Nmvfx91ugLXOOZGF8"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 
-    <script src="jquery.geocomplete.js"></script>
+    <script src="jquery.geocomplete.min.js"></script>
 
     <script>
       frameParam = '';
@@ -43,18 +43,18 @@
 
         var $locationInput = $(".location-input")
         $locationInput.geocomplete({
-  				map: ".map-canvas",
+          map: ".map-canvas",
           location: locationParam,
-  				componentRestrictions: {country: "nz"},
+          componentRestrictions: {country: "nz"},
           types: [],
-  				mapOptions: {
-  					zoom: 5,
-  					center: {lat: -40.917170, lng: 173.456179},
-  					draggable: true,
-  					gestureHandling: "cooperative",
-  					fullscreenControl: false,
-  					mapTypeControl: false,
-  					streetViewControl: false
+          mapOptions: {
+            zoom: 5,
+            center: {lat: -40.917170, lng: 173.456179},
+            draggable: true,
+            gestureHandling: "cooperative",
+            fullscreenControl: false,
+            mapTypeControl: false,
+            streetViewControl: false
   				}
   			})
   				.bind("geocode:result", onAddressChanged)
