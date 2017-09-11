@@ -104,8 +104,6 @@
           country: addressTypeToValue['country'] ? addressTypeToValue['country'] : ''
         };
 
-        console.dir(data)
-
         $("[name='lat']").val(data.lat);
         $("[name='lng']").val(data.lng);
 
@@ -125,9 +123,6 @@
           frame: frameParam,
           notes: $(".notes-input").val()
         };
-
-        console.dir(data)
-
         window.parent.postMessage(data, '*');
       }
     </script>
