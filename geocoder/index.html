@@ -45,7 +45,7 @@
         $locationInput.geocomplete({
   				map: ".map-canvas",
           input: locationParam,
-          location: locationParam,
+          //location: locationParam,
   				componentRestrictions: {country: "nz"},
           types: [],
   				mapOptions: {
@@ -63,7 +63,7 @@
             // do nothing
           });
 
-        $locationInput.val(locationParam);
+        // $locationInput.val(locationParam);
         $locationInput.focus();
 
       });
