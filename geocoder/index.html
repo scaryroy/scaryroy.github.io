@@ -65,7 +65,8 @@
 
         // $locationInput.val(locationParam);
         //$locationInput.focus();
-        $locationInput.trigger('blur').val(locationParam);
+        $locationInput.val(locationParam);
+        $locationInput.trigger("geocode");
 
       });
 
