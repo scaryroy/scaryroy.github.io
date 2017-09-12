@@ -17,9 +17,9 @@
 
     <div class="map-canvas"></div>
 
-    Lat:<input name="lat"> Lng:<input name="lng">
+    <!-- Lat:<input name="lat"> Lng:<input name="lng">
     Flat:<input name="flat"> Number:<input name="number"> Street:<input name="street">
-    Suburb:<input name="suburb"> Postcode:<input name="postcode"> City:<input name="city"> Country:<input name="country">
+    Suburb:<input name="suburb"> Postcode:<input name="postcode"> City:<input name="city"> Country:<input name="country"> -->
 
     <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyA-aYIWcm8umGxX-3Nmvfx91ugLXOOZGF8"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -108,16 +108,16 @@
           country: addressTypeToValue['country'] ? addressTypeToValue['country'] : ''
         };
 
-        $("[name='lat']").val(data.lat);
-        $("[name='lng']").val(data.lng);
-
-        $("[name='flat']").val(data.flat);
-        $("[name='number']").val(data.number);
-        $("[name='street']").val(data.street);
-        $("[name='suburb']").val(data.suburb);
-        $("[name='postcode']").val(data.postcode);
-        $("[name='city']").val(data.city);
-        $("[name='country']").val(data.country);
+        // $("[name='lat']").val(data.lat);
+        // $("[name='lng']").val(data.lng);
+        //
+        // $("[name='flat']").val(data.flat);
+        // $("[name='number']").val(data.number);
+        // $("[name='street']").val(data.street);
+        // $("[name='suburb']").val(data.suburb);
+        // $("[name='postcode']").val(data.postcode);
+        // $("[name='city']").val(data.city);
+        // $("[name='country']").val(data.country);
 
         window.parent.postMessage(data, '*');
       }
