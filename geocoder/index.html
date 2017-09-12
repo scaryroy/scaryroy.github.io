@@ -7,12 +7,22 @@
   </head>
   <body>
 
-    <form>
-      <label class="label location-label">Location</label>
-      <input class="input location-input" type="text" placeholder="Start typing your location... then select from dropdown" size="90">
+    <script>
+      urlParams = {};
+      location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (str, key, value) { urlParams[key] = value })
+      function getUrlParam(key, defaultValue) { return (urlParams[key] || defaultValue || '') }
+    </script>
 
-      <label class="label notes-label">Access Information (optional)</label>
-      <input class="input notes-input" type="text" placeholder="I.e. Building access code or directions" size="90">
+    <form>
+      <label class="label location-label">
+        <script>document.write(getUrlParam('locationlabel', 'Location'))</script>
+      </label>
+      <input id="location-input" class="input" type="text">
+
+      <label class="label notes-label">
+        <script>document.write(getUrlParam('noteslabel', 'Access Information (optional)'))</script>
+      </label>
+      <input id="notes-input" class="input" type="text">
     </form>
 
     <div class="map-canvas"></div>
@@ -27,26 +37,23 @@
     <script src="jquery.geocomplete.min.js"></script>
 
     <script>
-      frameParam = '';
-      locationParam = '';
-      notesparam = '';
+      document.getElementById("location-input").value = getUrlParam('location');
+      document.getElementById("location-input").placeholder = getUrlParam('locationplaceholder', 'Start typing your location... then select from dropdown');
+
+      document.getElementById("notes-input").value = getUrlParam('notes');
+      document.getElementById("notes-input").placeholder = getUrlParam('notesplaceholder', 'I.e. Building access code or directions');
 
       $(function() {
-        frameParam = getUrlParam("frame");
-        locationParam = getUrlParam("location");
-        notesParam = getUrlParam("notes");
-
-        var $notesInput = $(".notes-input");
-        $notesInput.val(notesParam);
+        var $notesInput = $("#notes-input");
         $notesInput.keyup(onNotesChange);
         $notesInput.change(onNotesChange);
 
-        var $locationInput = $(".location-input");
+        var $locationInput = $("#location-input");
         $locationInput.keyup(onLocationChange);
         $locationInput.change(onLocationChange);
         $locationInput.geocomplete({
           map: ".map-canvas",
-          location: locationParam,
+          location: getUrlParam('location'),
           componentRestrictions: {country: "nz"},
           types: [],
           mapOptions: {
@@ -64,21 +71,9 @@
             // do nothing
           });
 
-        $locationInput.val(locationParam);
         $locationInput.focus();
 
       });
-
-      function getUrlParam(name, url) {
-        if (!url) url = window.location.href;
-        name = name.replace(/[\[\]]/g, "\\$&");
-        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-            results = regex.exec(url);
-        if (!results) return '';
-        if (!results[2]) return '';
-        var output = decodeURIComponent(results[2].replace(/\+/g, " "));
-        return (output ? output : '');
-      }
 
       function onAddressChange(event, place) {
         if (!place) return;
@@ -94,9 +89,9 @@
         }
 
         var data = {
-          frame: frameParam,
+          frame: getUrlParam('frame'),
 
-          location: $(".location-input").val(),
+          location: $("#location-input").val(),
 
           lat: place.geometry.location.lat(),
           lng: place.geometry.location.lng(),
@@ -125,11 +120,11 @@
       }
 
       function onNotesChange(e) {
-        window.parent.postMessage({frame: frameParam, notes: e.target.value}, '*');
+        window.parent.postMessage({frame: getUrlParam('frame'), notes: e.target.value}, '*');
       }
 
       function onLocationChange(e) {
-        window.parent.postMessage({frame: frameParam, location: e.target.value}, '*');
+        window.parent.postMessage({frame: getUrlParam('frame'), location: e.target.value}, '*');
       }
 
     </script>
