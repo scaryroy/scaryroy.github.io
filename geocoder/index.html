@@ -9,7 +9,7 @@
 
     <script>
       urlParams = {};
-      location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (str, key, value) { urlParams[key] = value })
+      location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (str, key, value) { urlParams[key] = decodeURIComponent(value) })
       function getUrlParam(key, defaultValue) { return (urlParams[key] || defaultValue || '') }
     </script>
 
