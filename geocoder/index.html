@@ -38,10 +38,12 @@
 
         var $notesInput = $(".notes-input");
         $notesInput.val(notesParam);
-        $notesInput.keyup(onNotesChanged);
-        $notesInput.change(onNotesChanged);
+        $notesInput.keyup(onNotesChange);
+        $notesInput.change(onNotesChange);
 
-        var $locationInput = $(".location-input")
+        var $locationInput = $(".location-input");
+        $locationInput.keyup(onLocationChange);
+        $locationInput.change(onLocationChange);
         $locationInput.geocomplete({
           map: ".map-canvas",
           location: locationParam,
@@ -57,7 +59,7 @@
             streetViewControl: false
   				}
   			})
-  				.bind("geocode:result", onAddressChanged)
+  				.bind("geocode:result", onAddressChange)
   				.bind("geocode:error", function(event, status) {
             // do nothing
           });
@@ -78,7 +80,7 @@
         return (output ? output : '');
       }
 
-      function onAddressChanged(event, place) {
+      function onAddressChange(event, place) {
         if (!place) return;
         if (!place.geometry) return;
 
@@ -122,13 +124,14 @@
         window.parent.postMessage(data, '*');
       }
 
-      function onNotesChanged(event, place) {
-        var data = {
-          frame: frameParam,
-          notes: $(".notes-input").val()
-        };
-        window.parent.postMessage(data, '*');
+      function onNotesChange(e) {
+        window.parent.postMessage({frame: frameParam, notes: e.target.value}, '*');
       }
+
+      function onLocationChange(e) {
+        window.parent.postMessage({frame: frameParam, location: e.target.value}, '*');
+      }
+
     </script>
   </body>
 </html>
