@@ -54,7 +54,7 @@
         $locationInput.geocomplete({
           map: ".map-canvas",
           location: getUrlParam('location'),
-          componentRestrictions: {country: "nz"},
+          componentRestrictions: {country: ["nz", "au"]},
           types: [],
           mapOptions: {
             zoom: 5,
