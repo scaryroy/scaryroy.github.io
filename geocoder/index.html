@@ -102,19 +102,10 @@
           suburb: addressTypeToValue['sublocality'] ? addressTypeToValue['sublocality'] : '',
           postcode: addressTypeToValue['postal_code'] ? addressTypeToValue['postal_code'] : '',
           city: addressTypeToValue['locality'] ? addressTypeToValue['locality'] : '',
-          country: addressTypeToValue['country'] ? addressTypeToValue['country'] : ''
+          country: addressTypeToValue['country'] ? addressTypeToValue['country'] : '',
+          
+          components: addressTypeToValue
         };
-
-        // $("[name='lat']").val(data.lat);
-        // $("[name='lng']").val(data.lng);
-        //
-        // $("[name='flat']").val(data.flat);
-        // $("[name='number']").val(data.number);
-        // $("[name='street']").val(data.street);
-        // $("[name='suburb']").val(data.suburb);
-        // $("[name='postcode']").val(data.postcode);
-        // $("[name='city']").val(data.city);
-        // $("[name='country']").val(data.country);
 
         window.parent.postMessage(data, '*');
       }
