@@ -88,6 +88,10 @@
           }
         }
 
+        var country = addressTypeToValue['country'] ? addressTypeToValue['country'] : '';
+        var isAu = false;
+        if (country == 'AU') isAu = true;
+        
         var data = {
           frame: getUrlParam('frame'),
 
@@ -99,13 +103,25 @@
           flat: addressTypeToValue['subpremise'] ? addressTypeToValue['subpremise'] : '',
           number: addressTypeToValue['street_number'] ? addressTypeToValue['street_number'] : '',
           street: addressTypeToValue['route'] ? addressTypeToValue['route'] : '',
-          suburb: addressTypeToValue['sublocality'] ? addressTypeToValue['sublocality'] : '',
           postcode: addressTypeToValue['postal_code'] ? addressTypeToValue['postal_code'] : '',
+          
+          
+          suburb: addressTypeToValue['sublocality'] ? addressTypeToValue['sublocality'] : '',
+          
           city: addressTypeToValue['locality'] ? addressTypeToValue['locality'] : '',
-          country: addressTypeToValue['country'] ? addressTypeToValue['country'] : '',
+          country: country,
           
           components: addressTypeToValue
         };
+        
+        if (!isAu) {
+          data.suburb = addressTypeToValue['sublocality'] ? addressTypeToValue['sublocality'] : '';
+          data.city = addressTypeToValue['locality'] ? addressTypeToValue['locality'] : '';
+        } else {
+          data.suburb = addressTypeToValue['locality'] ? addressTypeToValue['locality'] : '';
+          data.city = addressTypeToValue['administrative_area_level_2'] ? addressTypeToValue['administrative_area_level_2'] : '';
+          data.state = addressTypeToValue['administrative_area_level_1'] ? addressTypeToValue['administrative_area_level_1'] : '';
+        }
 
         window.parent.postMessage(data, '*');
       }
