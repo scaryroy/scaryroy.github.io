@@ -118,6 +118,7 @@
         } else {
           data.suburb = addressTypeToValue['locality'] ? addressTypeToValue['locality'] : '';
           data.city = addressTypeToValue['administrative_area_level_2'] ? addressTypeToValue['administrative_area_level_2'] : '';
+          data.city = data.city.replace("City of ", "");
           data.state = addressTypeToValue['administrative_area_level_1'] ? addressTypeToValue['administrative_area_level_1'] : '';
         }
 
