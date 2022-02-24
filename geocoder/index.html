@@ -105,9 +105,6 @@
           street: addressTypeToValue['route'] ? addressTypeToValue['route'] : '',
           postcode: addressTypeToValue['postal_code'] ? addressTypeToValue['postal_code'] : '',
           
-          
-          suburb: addressTypeToValue['sublocality'] ? addressTypeToValue['sublocality'] : '',
-          
           city: addressTypeToValue['locality'] ? addressTypeToValue['locality'] : '',
           country: country,
           
@@ -117,6 +114,7 @@
         if (!isAu) {
           data.suburb = addressTypeToValue['sublocality'] ? addressTypeToValue['sublocality'] : '';
           data.city = addressTypeToValue['locality'] ? addressTypeToValue['locality'] : '';
+          data.state = '';
         } else {
           data.suburb = addressTypeToValue['locality'] ? addressTypeToValue['locality'] : '';
           data.city = addressTypeToValue['administrative_area_level_2'] ? addressTypeToValue['administrative_area_level_2'] : '';
