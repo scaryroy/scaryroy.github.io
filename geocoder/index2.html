@@ -83,12 +83,16 @@
           strokeWeight: 2,
           fillColor: "#FF0000",
           fillOpacity: 0.35,
-          mapObj,
+          map: mapObj,
           center: {lat:-36.89146288703582, lng:174.91103139219035},
           radius: 3000,
         });
         
         $locationInput.focus();
+        
+        // also consider this:
+        // drawingManager = new google.maps.drawing.DrawingManager();
+        // drawingManager.setMap(temp1);
 
       });
 
