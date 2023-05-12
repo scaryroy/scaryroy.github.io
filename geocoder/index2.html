@@ -51,7 +51,7 @@
         var $locationInput = $("#location-input");
         $locationInput.keyup(onLocationChange);
         $locationInput.change(onLocationChange);
-        $locationInput.geocomplete({
+        var resultObj = $locationInput.geocomplete({
           map: ".map-canvas",
           location: getUrlParam('location'),
           componentRestrictions: {country: ["nz", "au"]},
@@ -70,6 +70,8 @@
   				.bind("geocode:error", function(event, status) {
             // do nothing
           });
+        
+        console.dir(resultObj);
 
         $locationInput.focus();
 
