@@ -31,7 +31,7 @@
     Flat:<input name="flat"> Number:<input name="number"> Street:<input name="street">
     Suburb:<input name="suburb"> Postcode:<input name="postcode"> City:<input name="city"> Country:<input name="country"> -->
 
-    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyC69uum_fQCeMeQrM9LqUbzA3DpvmO8lQ8"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=places,drawing&key=AIzaSyC69uum_fQCeMeQrM9LqUbzA3DpvmO8lQ8"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 
     <script src="jquery.geocomplete.min.js"></script>
@@ -74,7 +74,7 @@
         
         var mapObj = $locationInput.geocomplete("map");
         
-        console.log("V1");
+        console.log("V3");
         console.dir(mapObj);
 
         new google.maps.Circle({
