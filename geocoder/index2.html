@@ -71,7 +71,10 @@
             // do nothing
           });
         
-        console.dir(resultObj);
+        
+        var mapObj = $locationInput.geocomplete("map");
+        mapObj.setZoom(3);
+        console.dir(mapObj);
 
         $locationInput.focus();
 
