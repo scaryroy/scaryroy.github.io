@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Geocoder</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="index.css">
+  </head>
+  <body>
+
+    <script>
+      urlParams = {};
+      location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (str, key, value) { urlParams[key] = decodeURIComponent(value) })
+      function getUrlParam(key, defaultValue) { return (urlParams[key] || defaultValue || '') }
+    </script>
+
+    <form>
+      <label class="label location-label">
+        <script>document.write(getUrlParam('locationlabel', 'Location'))</script>
+      </label>
+      <input id="location-input" class="input" type="text">
+
+      <label class="label notes-label">
+        <script>document.write(getUrlParam('noteslabel', 'Access Information (optional)'))</script>
+      </label>
+      <input id="notes-input" class="input" type="text">
+    </form>
+
+    <div class="map-canvas"></div>
+
+    <!-- Lat:<input name="lat"> Lng:<input name="lng">
+    Flat:<input name="flat"> Number:<input name="number"> Street:<input name="street">
+    Suburb:<input name="suburb"> Postcode:<input name="postcode"> City:<input name="city"> Country:<input name="country"> -->
+
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyC69uum_fQCeMeQrM9LqUbzA3DpvmO8lQ8"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
+    <script src="jquery.geocomplete.min.js"></script>
+
+    <script>
+      document.getElementById("location-input").value = getUrlParam('location');
+      document.getElementById("location-input").placeholder = getUrlParam('locationplaceholder', 'Start typing your location... then select from dropdown');
+
+      document.getElementById("notes-input").value = getUrlParam('notes');
+      document.getElementById("notes-input").placeholder = getUrlParam('notesplaceholder', 'I.e. Building access code or directions');
+
+      $(function() {
+        var $notesInput = $("#notes-input");
+        $notesInput.keyup(onNotesChange);
+        $notesInput.change(onNotesChange);
+
+        var $locationInput = $("#location-input");
+        $locationInput.keyup(onLocationChange);
+        $locationInput.change(onLocationChange);
+        $locationInput.geocomplete({
+          map: ".map-canvas",
+          location: getUrlParam('location'),
+          componentRestrictions: {country: ["nz", "au"]},
+          types: [],
+          mapOptions: {
+            zoom: 5,
+            center: {lat: -40.917170, lng: 173.456179},
+            draggable: true,
+            gestureHandling: "cooperative",
+            fullscreenControl: false,
+            mapTypeControl: false,
+            streetViewControl: false
+  				}
+  			})
+  				.bind("geocode:result", onAddressChange)
+  				.bind("geocode:error", function(event, status) {
+            // do nothing
+          });
+
+        $locationInput.focus();
+
+      });
+
+      function onAddressChange(event, place) {
+        if (!place) return;
+        if (!place.geometry) return;
+
+        var addressTypeToValue = {};
+        for(var i = place.address_components.length - 1; i >= 0; i--) {
+          var addressComponent = place.address_components[i];
+          for(var j = 0; j < addressComponent.types.length; j++) {
+            var addressComponentType = addressComponent.types[j];
+            addressTypeToValue[addressComponentType] = addressComponent.short_name;
+          }
+        }
+
+        var country = addressTypeToValue['country'] ? addressTypeToValue['country'] : '';
+        var isAu = false;
+        if (country == 'AU') isAu = true;
+        
+        var data = {
+          frame: getUrlParam('frame'),
+
+          location: $("#location-input").val(),
+
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
+
+          flat: addressTypeToValue['subpremise'] ? addressTypeToValue['subpremise'] : '',
+          number: addressTypeToValue['street_number'] ? addressTypeToValue['street_number'] : '',
+          street: addressTypeToValue['route'] ? addressTypeToValue['route'] : '',
+          postcode: addressTypeToValue['postal_code'] ? addressTypeToValue['postal_code'] : '',
+          
+          city: addressTypeToValue['locality'] ? addressTypeToValue['locality'] : '',
+          country: country,
+          
+          components: addressTypeToValue
+        };
+        
+        if (!isAu) {
+          data.suburb = addressTypeToValue['sublocality'] ? addressTypeToValue['sublocality'] : '';
+          data.city = addressTypeToValue['locality'] ? addressTypeToValue['locality'] : '';
+          data.state = '';
+        } else {
+          data.suburb = addressTypeToValue['locality'] ? addressTypeToValue['locality'] : '';
+          data.city = addressTypeToValue['administrative_area_level_2'] ? addressTypeToValue['administrative_area_level_2'] : '';
+          data.city = data.city.replace("City of ", "");
+          data.state = addressTypeToValue['administrative_area_level_1'] ? addressTypeToValue['administrative_area_level_1'] : '';
+        }
+
+        window.parent.postMessage(data, '*');
+      }
+
+      function onNotesChange(e) {
+        window.parent.postMessage({frame: getUrlParam('frame'), notes: e.target.value}, '*');
+      }
+
+      function onLocationChange(e) {
+        window.parent.postMessage({frame: getUrlParam('frame'), location: e.target.value}, '*');
+      }
+
+    </script>
+  </body>
+</html>
