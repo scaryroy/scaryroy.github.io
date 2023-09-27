@@ -73,6 +73,11 @@
 
         $locationInput.focus();
 
+        this.bindEvent(window, 'message', (e) => {
+    		  console.log("message received!");
+          console.dir(e);
+    		})
+
       });
 
       function onAddressChange(event, place) {
