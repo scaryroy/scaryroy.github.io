@@ -74,8 +74,17 @@
         $locationInput.focus();
 
         console.log("internal iframe loaded");
+
+        var bindEvent = function (element, eventName, eventHandler) {
+      		// support for IE8
+      		if (element.addEventListener){
+      			element.addEventListener(eventName, eventHandler, false)
+      		} else if (element.attachEvent) {
+      			element.attachEvent('on' + eventName, eventHandler)
+      		}
+      	}
         
-        this.bindEvent(window, 'message', (e) => {
+        bindEvent(window, 'message', (e) => {
     		  console.log("message received!");
           console.dir(e);
     		})
