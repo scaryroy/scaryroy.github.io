@@ -73,6 +73,8 @@
 
         $locationInput.focus();
 
+        console.log("internal iframe loaded");
+        
         this.bindEvent(window, 'message', (e) => {
     		  console.log("message received!");
           console.dir(e);
